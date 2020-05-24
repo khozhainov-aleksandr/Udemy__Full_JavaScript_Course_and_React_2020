@@ -17,19 +17,22 @@
 	console.log(decr);
 */
 
-// 
+// -
 
 /*
 	console.log(4*2 == '8'); // true
 	console.log(4*2 === '8'); // false
 */
 
-// 
+// -
 
 //> &&   И
 //> ||   ИЛИ
 
-const isChecked = true,
-		isClose = true;
+// const isChecked = true,
+//	isClose = false;
 
-console.log(isChecked && isClose);
+// console.log(isChecked && isClose);
+
+// console.log(2 + 2 * 2 != 8); //> Выдает true потому что стоит знак (не равно) и получаеться что 6 не равно 8
+
