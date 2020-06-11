@@ -33,5 +33,5 @@ const logan = function() {
 };
 logan();
 
-const calc = (a, b) => a + b;
-console.log(calc(8, 8));
+const calcSum = (a, b) => a + b;
+console.log(calcSum(8, 8));
