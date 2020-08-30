@@ -20,21 +20,21 @@ const buttons = document.querySelectorAll('button'),
 
 //. Проверка на наличие класса в элементе.
 // if (buttons[0].classList.contains('red')) {
-//   console.log('red');
+// console.log('red');
 // } else {
-//   console.log('Nothing');
+// console.log('Nothing');
 // }
 
 //. По нажатию на первую кнопу, добавляет класс red на вторую кнопку.
 // buttons[0].addEventListener('click', () => {
 // if (!buttons[1].classList.contains('red')) {
-//   buttons[1].classList.add('red');
+// buttons[1].classList.add('red');
 // } else {
-//   buttons[1].classList.remove('red');
+// buttons[1].classList.remove('red');
 // }
 
 //. То же самое что и выше (но гибко не настраивается).
-//   buttons[1].classList.toggle('red');
+// buttons[1].classList.toggle('red');
 // });
 
 //> Делегирование событиями.
