@@ -1,6 +1,8 @@
 'use strict';
 
 window.addEventListener('DOMContentLoaded', () => {
+  //+ Переключение Табов на странице.
+
   const tabs = document.querySelectorAll('.tabheader__item');
   const tabsContent = document.querySelectorAll('.tabcontent');
   const tabParent = document.querySelector('.tabheader__items');
@@ -44,4 +46,74 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+
+  //+ Настройка Таймера (Обратный отсчет времени).
+
+  const deadline = '2020-12-31';
+
+  //* Функция между дедлайном и нашим текущим временем.
+  function getTimerRemaining(endTime) {
+    //. Получаем сюда разницу в миллисекундах.
+    const t = Date.parse(endTime) - Date.parse(new Date());
+
+    //. Конвертация миллисекунд в нормальное время. (миллисекунды * секунды * минуты * часы)
+    const days = Math.floor(t / (1000 * 60 * 60 * 24));
+    //. Используем остаток от деления, что бы получить не больше 24 часов.
+    const hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((t / 1000 / 60) % 60);
+    const seconds = Math.floor((t / 1000) % 60);
+
+    //. Используем return для того что бы эти переменные использовать за пределами функции.
+    return {
+      total: t,
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+    };
+  }
+
+  //* Функция которая добавляет 0 перед числами, когда там меньше 10.
+  function getZero(num) {
+    if (num >= 0 && num < 10) {
+      return `0${num}`;
+    } else {
+      return num;
+    }
+  }
+
+  //* Функция которая будет устанавливать таймер на страницу.
+  function setClock(selector, endTime) {
+    //. Универсальное обращение к селекторам для возможности повторного использования на странице.
+    const timer = document.querySelector(selector);
+    const days = timer.querySelector('#days');
+    const hours = timer.querySelector('#hours');
+    const minutes = timer.querySelector('#minutes');
+    const seconds = timer.querySelector('#seconds');
+    //. Обновляет таймер каждую секунду.
+    const timeInterval = setInterval(upDateClock, 1000);
+
+    //. Запускаем тут функцию для того что бы при обновлении страницы, таймер не моргал.
+    upDateClock();
+
+    //* Функция которая будет обновлять таймер, каждую секунду.
+    function upDateClock() {
+      //. Рассчитает время.
+      const t = getTimerRemaining(endTime);
+
+      //. Запишет данные на страницу.
+      days.innerHTML = getZero(t.days);
+      hours.innerHTML = getZero(t.hours);
+      minutes.innerHTML = getZero(t.minutes);
+      seconds.innerHTML = getZero(t.seconds);
+
+      //. Если время ушло в отрицательный показатель то таймер больше не обновлять.
+      if (t.total <= 0) {
+        clearInterval(timeInterval);
+      }
+    }
+  }
+
+  //. Запускаем таймер.
+  setClock('.timer', deadline);
 });
