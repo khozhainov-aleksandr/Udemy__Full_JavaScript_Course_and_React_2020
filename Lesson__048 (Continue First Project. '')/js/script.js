@@ -176,5 +176,9 @@ window.addEventListener('DOMContentLoaded', () => {
       // NOTE: Удаляем обработчик события, что бы он не сработал второй раз.
       window.removeEventListener('scroll', showModalByScroll);
     }
-  }
+	}
+
+	// ----------
+
+	// ----------
 });
