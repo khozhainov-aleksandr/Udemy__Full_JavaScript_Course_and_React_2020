@@ -49,16 +49,26 @@ window.addEventListener('DOMContentLoaded', () => {
 
   //+ Настройка Таймера (Обратный отсчет времени).
 
+
+
+
+
+
+
+
   //. Время окончания таймера.
-  const deadline = '2020-12-31';
+  const deadline = '2010-08-01';
 
   //* Функция между дедлайном и нашим текущим временем.
   function getTimerRemaining(endTime) {
     //. Получаем сюда разницу в миллисекундах.
-    const t = Date.parse(endTime) - Date.parse(new Date());
+		const t = Date.parse(endTime) - Date.parse(new Date());
+		
+		const years = Math.floor(t / (1000 * 60 * 60 * 24 * 31 * 12));
+		const months = Math.floor(t / (1000 * 60 * 60 * 24 * 31) % 12);
 
     //. Конвертация миллисекунд в нормальное время. (миллисекунды * секунды * минуты * часы)
-    const days = Math.floor(t / (1000 * 60 * 60 * 24));
+    const days = Math.floor(t / (1000 * 60 * 60 * 24) % 30);
     //. Используем остаток от деления, что бы получить не больше 24 часов.
     const hours = Math.floor((t / (1000 * 60 * 60)) % 24);
     const minutes = Math.floor((t / 1000 / 60) % 60);
@@ -66,11 +76,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //. Используем return для того что бы эти переменные использовать за пределами функции.
     return {
-      total: t,
+			total: t,
+			years: years,
+			months: months,
       days: days,
       hours: hours,
       minutes: minutes,
-      seconds: seconds,
+			seconds: seconds,
     };
   }
 
@@ -86,7 +98,9 @@ window.addEventListener('DOMContentLoaded', () => {
   //* Функция которая будет устанавливать таймер на страницу.
   function setClock(selector, endTime) {
     //. Универсальное обращение к селекторам для возможности повторного использования на странице.
-    const timer = document.querySelector(selector);
+		const timer = document.querySelector(selector);
+		const years = timer.querySelector('#years');
+		const months = timer.querySelector('#months');
     const days = timer.querySelector('#days');
     const hours = timer.querySelector('#hours');
     const minutes = timer.querySelector('#minutes');
@@ -102,21 +116,32 @@ window.addEventListener('DOMContentLoaded', () => {
       //. Рассчитает время.
       const t = getTimerRemaining(endTime);
 
-      //. Запишет данные на страницу.
-      days.innerHTML = getZero(t.days);
-      hours.innerHTML = getZero(t.hours);
-      minutes.innerHTML = getZero(t.minutes);
-      seconds.innerHTML = getZero(t.seconds);
+			//. Запишет данные на страницу.
+			years.innerHTML = getZero(-t.years);
+			months.innerHTML = getZero(-t.months);
+      days.innerHTML = getZero(-t.days);
+      hours.innerHTML = getZero(-t.hours);
+      minutes.innerHTML = getZero(-t.minutes);
+      seconds.innerHTML = getZero(-t.seconds);
 
       //. Если время ушло в отрицательный показатель то таймер больше не обновлять.
-      if (t.total <= 0) {
-        clearInterval(timeInterval);
-      }
+      // if (t.total <= 0) {
+      //   clearInterval(timeInterval);
+      // }
     }
   }
 
   //. Запускаем таймер.
   setClock('.timer', deadline);
+
+
+
+
+
+
+
+
+
 
   //+ Открытие и закрытие Модального окна.
 
