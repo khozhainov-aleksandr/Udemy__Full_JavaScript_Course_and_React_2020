@@ -15,7 +15,7 @@ inputRub.addEventListener('input', () => {
       const data = JSON.parse(request.response);
       inputUsd.value = (+inputRub.value / data.current.usd).toFixed(2);
     } else {
-      alert('Что то пошло не так, попробуйте позже!');
+      alert('Что то пошло не так, попробуйте пожалуйста позже!');
     }
   });
 });
