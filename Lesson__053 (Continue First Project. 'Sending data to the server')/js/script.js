@@ -254,5 +254,39 @@ window.addEventListener('DOMContentLoaded', () => {
 	).render();
 	
 	// SECTION: Отправка формы, POST запросы.
-	
+	const forms = document.querySelectorAll('form');
+
+	// Список сообщений которые будут показаны.
+	const message = {
+		loading: 'Загрузка ...',
+		success: 'Спасибо! Скоро мы с вами свяжемся :)',
+		failure: 'Что-то пошло не так ...'
+	};
+
+	function postData(form) {
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+
+			const statusMessage = document.createElement('div');
+			statusMessage.classList.add('status');
+			statusMessage.textContent = message.loading;
+			form.append(statusMessage);
+
+			const request = new XMLHttpRequest();
+			request.open('POST', 'server.php');
+
+			request.setRequestHeader('Content-type', 'multipart/forme-data');
+			const formData = new FormData(form);
+
+			request.send(formData);
+
+			// Отслеживаем конечную загрузку запроса.
+			request.addEventListener('load', () => {
+				if (request.status === 200) {
+					console.log(request.response);
+					statusMessage.textContent = message.success;
+				}
+			});
+		});
+	}
 });
