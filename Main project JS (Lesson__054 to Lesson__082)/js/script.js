@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // TOPIC: Настройка Таймера (Обратный отсчет времени).
 
   // NOTE: Время окончания таймера.
-  const deadline = '2020-12-31';
+  const deadline = '2021-12-31';
 
   // SECTION: Функция между дедлайном и нашим текущим временем.
   function getTimerRemaining(endTime) {
@@ -253,3 +253,6 @@ window.addEventListener('DOMContentLoaded', () => {
     '.menu .container'
   ).render();
 });
+
+// TOPIC: Реализация скрипта отправки данных на сервер.
+
