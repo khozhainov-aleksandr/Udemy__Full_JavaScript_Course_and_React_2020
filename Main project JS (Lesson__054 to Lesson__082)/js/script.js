@@ -261,23 +261,35 @@ window.addEventListener('DOMContentLoaded', () => {
 		failure:'Что-то пошло не так ...'
 	};
 
+	forms.forEach((item) => {
+		postData(item);
+	});
+
 	function postData(form) {
 		form.addEventListener('submit', (e) => {
 			e.preventDefault();
 
 			const statusMassage = document.createElement('div');
 			statusMassage.textContent = massage.loading;
+			form.append(statusMassage);
 
 			const request = new XMLHttpRequest();
 			request.open('POST', 'server.php');
 
-			request.setRequestHeader('Content-type', 'multipart/form-data');
+			// request.setRequestHeader('Content-type', 'multipart/form-data');
 			const formData = new FormData(form);
 
 			request.send(formData);
 			request.addEventListener('load', () => {
 				if (request.status === 200) {
 					console.log(request.response );
+					statusMassage.textContent = massage.success;
+					form.reset();
+					setTimeout(() => {
+						statusMassage.remove();
+					}, 2000);
+				} else {
+					statusMassage.textContent = massage.failure;
 				}
 			});
 
