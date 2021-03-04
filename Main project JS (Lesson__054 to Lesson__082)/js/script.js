@@ -121,7 +121,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // TOPIC: Открытие и закрытие Модального окна.
 
   const openModals = document.querySelectorAll('[data-modal]');
-  const closeModal = document.querySelector('[data-close]');
   const modalWrapper = document.querySelector('.modal');
 
   // SECTION: Открываем модальное окно.
@@ -135,12 +134,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // SECTION: Автоматическое Открытие модального окна через заданное время.
   const modalTimerId = setTimeout(openModalWindow, 60000); // NOTE: 1 минута.
 
-  // SECTION: Закрываем модальное окно.
-  closeModal.addEventListener('click', closeModalWindow);
-
   // SECTION: Закрытие модального окна, по клику за его приделами.
   modalWrapper.addEventListener('click', (event) => {
-    if (event.target === modalWrapper) {
+		// NOTE: Если мы кликаем на подложку ИЛИ если кликаем на крестик то закрывается модальное окно.
+    if (event.target === modalWrapper || event.target.getAttribute('data-close') === '') {
       closeModalWindow();
     }
   });
@@ -256,7 +253,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	// TOPIC: Реализация скрипта отправки данных на сервер.
 	const forms = document.querySelectorAll('form');
 	const massage = {
-		loading:'Загрузка',
+		loading:'./icons/spinner.svg',
 		success:'Спасибо! Скоро мы с вами свяжемся.',
 		failure:'Что-то пошло не так ...'
 	};
@@ -269,9 +266,15 @@ window.addEventListener('DOMContentLoaded', () => {
 		form.addEventListener('submit', (e) => {
 			e.preventDefault();
 
-			const statusMassage = document.createElement('div');
+			const statusMassage = document.createElement('img');
+			statusMassage.src = massage.loading;
 			statusMassage.textContent = massage.loading;
+			statusMassage.style.cssText = `
+				display: block;
+				margin: 0 auto;
+			`;
 			form.append(statusMassage);
+			form.insertAdjacentElement('afterend', statusMassage);
 
 			const request = new XMLHttpRequest();
 			request.open('POST', 'server.php');
@@ -291,18 +294,42 @@ window.addEventListener('DOMContentLoaded', () => {
 			request.addEventListener('load', () => {
 				if (request.status === 200) {
 					console.log(request.response );
-					statusMassage.textContent = massage.success;
+					showThanksModal(massage.success);
 					form.reset();
-					setTimeout(() => {
-						statusMassage.remove();
-					}, 2000);
+					statusMassage.remove();
 				} else {
-					statusMassage.textContent = massage.failure;
+					showThanksModal(massage.failure);
 				}
 			});
 
 		});
 	}
 
+	// TOPIC: Beautiful user alert
+
+	function showThanksModal(message) {
+		const prevModalDialog = document.querySelector('.modal__dialog');
+
+		prevModalDialog.classList.add('hide');
+		openModalWindow();
+
+		const thanksModal = document.createElement('div');
+		thanksModal.classList.add('modal__dialog');
+		thanksModal.innerHTML = `
+			<div class="modal__content">
+				<div data-close class="modal__close">&times;</div>
+				<div class="modal__title">${message}</div>
+			</div>
+		`;
+
+		document.querySelector('.modal').append(thanksModal);
+
+		setTimeout(() => {
+			thanksModal.remove();
+			prevModalDialog.classList.add('show');
+			prevModalDialog.classList.remove('hide');
+			closeModalWindow();
+		}, 5000);
+	}
 
 });
