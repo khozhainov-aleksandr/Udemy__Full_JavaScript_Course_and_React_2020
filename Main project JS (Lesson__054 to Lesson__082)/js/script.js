@@ -332,4 +332,5 @@ window.addEventListener('DOMContentLoaded', () => {
 		}, 5000);
 	}
 
-});
+	// TOPIC: Fetch API
+
