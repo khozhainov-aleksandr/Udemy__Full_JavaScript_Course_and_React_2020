@@ -34,3 +34,35 @@
 
 // TOPIC: reduce
 
+// const arr = [2,3,5,1,7,4,8,5];
+
+// // NOTE: Складывает все числа в массиве.
+// const res = arr.reduce((sum,current) => sum + current);
+// console.log(res); // 35
+
+// ----------
+
+// const arr = ['apple', 'orange', 'watermelon', 'melon'];
+
+// // NOTE: Складывает все слова в массиве.
+// const res = arr.reduce((sum,current) => `${sum}, ${current}`);
+// console.log(res); // apple, orange, watermelon, melon
+
+// TOPIC: Example
+
+const obj = {
+	alex: 'persona',
+	ivan: 'persona',
+	dog: 'animal',
+	cat: 'animal'
+};
+
+// NOTE: entries - переводит Объект в Массив для работы с ним.
+// const newArr = Object.entries(obj);
+// console.log(newArr);
+
+const newArr = Object.entries(obj)
+.filter(item => item[1] === 'persona')
+.map(item => item[0]);
+
+console.log(newArr); // ["alex", "ivan"]
