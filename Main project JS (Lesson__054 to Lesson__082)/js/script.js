@@ -334,4 +334,9 @@ window.addEventListener('DOMContentLoaded', () => {
 		}, 5000);
 	}
 
+	// NOTE: Start server: json-server db.json
+	fetch('http://localhost:3000/menu')
+		.then(data => data.json())
+		.then(res => console.log(res));
+
 });

@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/khozhainov-aleksandr/Udemy__Full_JavaScript_Course_and_React_2020/issues"
   },
-  "homepage": "https://github.com/khozhainov-aleksandr/Udemy__Full_JavaScript_Course_and_React_2020#readme"
+  "homepage": "https://github.com/khozhainov-aleksandr/Udemy__Full_JavaScript_Course_and_React_2020#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "json-server": "^0.16.3"
+  }
 }
