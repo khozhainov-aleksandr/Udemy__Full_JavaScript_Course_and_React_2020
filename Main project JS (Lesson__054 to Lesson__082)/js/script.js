@@ -259,10 +259,21 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 
 	forms.forEach((item) => {
-		postData(item);
+		bindPostData(item);
 	});
 
-	function postData(form) {
+	const postData = (url, data) => {
+		const res = fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: data
+		});
+		return res.json();
+	};
+
+	function bindPostData(form) {
 		form.addEventListener('submit', (e) => {
 			e.preventDefault();
 
