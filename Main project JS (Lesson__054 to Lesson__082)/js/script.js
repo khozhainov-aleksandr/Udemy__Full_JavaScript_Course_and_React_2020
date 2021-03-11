@@ -1,6 +1,9 @@
 'use strict';
 
 window.addEventListener('DOMContentLoaded', () => {
+	const JSONServerMenu = 'http://localhost:3000/menu';
+	const JSONServerRequest = 'http://localhost:3000/requests';
+
   // TOPIC: Переключение Табов на странице.
 
   const tabs = document.querySelectorAll('.tabheader__item');
@@ -222,33 +225,24 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // SECTION: Добавляем шаблонные карточки.
-  new MenuCard(
-    'img/tabs/vegy.jpg',
-    'vegy',
-    'Меню "Фитнес"',
-    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-    9,
-    '.menu .container'
-  ).render();
+	const getResource = async (url) => {
+		const res = await fetch(url);
 
-  new MenuCard(
-    'img/tabs/post.jpg',
-    'post',
-    'Меню "Постное"',
-    'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-    14,
-    '.menu .container'
-  ).render();
+		// Ручная обработка ошибки.
+		if (!res.ok) {
+			throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+		}
 
-  new MenuCard(
-    'img/tabs/elite.jpg',
-    'elite',
-    'Меню “Премиум”',
-    'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-    21,
-    '.menu .container'
-  ).render();
+		return await res.json();
+	};
+
+	  // SECTION: Добавляем шаблонные карточки.
+	getResource(JSONServerMenu)
+		.then(data => {
+			data.forEach(({src, alt, title, descr, price}) => {
+				new MenuCard(src, alt, title, descr, price, '.menu .container').render();
+			});
+		});
 
 	// TOPIC: Реализация скрипта отправки данных на сервер.
 	const forms = document.querySelectorAll('form');
@@ -262,15 +256,15 @@ window.addEventListener('DOMContentLoaded', () => {
 		bindPostData(item);
 	});
 
-	const postData = (url, data) => {
-		const res = fetch(url, {
+	const postData = async (url, data) => {
+		const res = await fetch(url, {
 			method: 'POST',
 			headers: {
 				'Content-type': 'application/json'
 			},
 			body: data
 		});
-		return res.json();
+		return await res.json();
 	};
 
 	function bindPostData(form) {
@@ -289,18 +283,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 			const formData = new FormData(form);
 
-			const object = {};
-			formData.forEach(function(value, key) {
-				object[key] = value;
-			});
+			const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-			fetch('server.php', {
-				method: 'POST',
-				headers: {
-					'Content-type': 'application/json'
-				},
-				body: JSON.stringify(object)
-			}).then(data => data.text())
+			postData(JSONServerRequest, json)
 			// Обработка успешной операции.
 			.then(data => {
 				console.log(data);
@@ -346,8 +331,8 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// NOTE: Start server: json-server db.json
-	fetch('http://localhost:3000/menu')
-		.then(data => data.json())
-		.then(res => console.log(res));
+	// fetch(JSONServerMenu)
+	// 	.then(data => data.json())
+	// 	.then(res => console.log(res));
 
 });
