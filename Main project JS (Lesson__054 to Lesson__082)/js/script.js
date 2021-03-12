@@ -335,4 +335,19 @@ window.addEventListener('DOMContentLoaded', () => {
 	// 	.then(data => data.json())
 	// 	.then(res => console.log(res));
 
+	// TOPIC: Slider
+	const slidersWrapper = document.querySelector('.offer__slider-wrapper');
+	const slidersField = document.querySelector('.offer__slider-inner');
+	const sliders = document.querySelectorAll('.offer__slider');
+	const prev = document.querySelector('offer__slider-prev');
+	const next = document.querySelector('offer__slider-next');
+	const current = document.querySelector('#current');
+	const total = document.querySelector('#total');
+	// Тут мы получаем ширину окошка, показываемого слайдера.
+	const width = window.getComputedStyle(slidersWrapper).width;
+	// Счетчик отображается от 1 а не как обычно от 0.
+	let sliderIndex = 1;
+
+
+
 });
