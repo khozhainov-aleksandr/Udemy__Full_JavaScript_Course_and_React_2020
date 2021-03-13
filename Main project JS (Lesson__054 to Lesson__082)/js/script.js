@@ -1,8 +1,8 @@
 'use strict';
 
 window.addEventListener('DOMContentLoaded', () => {
-	const JSONServerMenu = 'http://localhost:3000/menu';
-	const JSONServerRequest = 'http://localhost:3000/requests';
+  const JSONServerMenu = 'http://localhost:3000/menu';
+  const JSONServerRequest = 'http://localhost:3000/requests';
 
   // TOPIC: Переключение Табов на странице.
 
@@ -139,7 +139,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // SECTION: Закрытие модального окна, по клику за его приделами.
   modalWrapper.addEventListener('click', (event) => {
-		// NOTE: Если мы кликаем на подложку ИЛИ если кликаем на крестик то закрывается модальное окно.
+    // NOTE: Если мы кликаем на подложку ИЛИ если кликаем на крестик то закрывается модальное окно.
     if (event.target === modalWrapper || event.target.getAttribute('data-close') === '') {
       closeModalWindow();
     }
@@ -212,142 +212,203 @@ window.addEventListener('DOMContentLoaded', () => {
       }
 
       element.innerHTML = `
-				<img src=${this.src} alt=${this.alt}>
-				<h3 class="menu__item-subtitle">${this.title}</h3>
-				<div class="menu__item-descr">${this.descr}</div>
-				<div class="menu__item-divider"></div>
-				<div class="menu__item-price">
-						<div class="menu__item-cost">Цена:</div>
-						<div class="menu__item-total"><span>${this.price}</span> грн/день</div>
-				</div>
-			`;
+        <img src=${this.src} alt=${this.alt}>
+        <h3 class="menu__item-subtitle">${this.title}</h3>
+        <div class="menu__item-descr">${this.descr}</div>
+        <div class="menu__item-divider"></div>
+        <div class="menu__item-price">
+            <div class="menu__item-cost">Цена:</div>
+            <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+        </div>
+      `;
       this.parent.append(element);
     }
   }
 
-	const getResource = async (url) => {
-		const res = await fetch(url);
+  const getResource = async (url) => {
+    const res = await fetch(url);
 
-		// Ручная обработка ошибки.
-		if (!res.ok) {
-			throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-		}
+    // Ручная обработка ошибки.
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    }
 
-		return await res.json();
-	};
+    return await res.json();
+  };
 
-	  // SECTION: Добавляем шаблонные карточки.
-	getResource(JSONServerMenu)
-		.then(data => {
-			data.forEach(({src, alt, title, descr, price}) => {
-				new MenuCard(src, alt, title, descr, price, '.menu .container').render();
-			});
-		});
+    // SECTION: Добавляем шаблонные карточки.
+  getResource(JSONServerMenu)
+    .then(data => {
+      data.forEach(({src, alt, title, descr, price}) => {
+        new MenuCard(src, alt, title, descr, price, '.menu .container').render();
+      });
+    });
 
-	// TOPIC: Реализация скрипта отправки данных на сервер.
-	const forms = document.querySelectorAll('form');
-	const massage = {
-		loading:'./icons/spinner.svg',
-		success:'Спасибо! Скоро мы с вами свяжемся.',
-		failure:'Что-то пошло не так ...'
-	};
+  // TOPIC: Реализация скрипта отправки данных на сервер.
+  const forms = document.querySelectorAll('form');
+  const massage = {
+    loading:'./icons/spinner.svg',
+    success:'Спасибо! Скоро мы с вами свяжемся.',
+    failure:'Что-то пошло не так ...'
+  };
 
-	forms.forEach((item) => {
-		bindPostData(item);
-	});
+  forms.forEach((item) => {
+    bindPostData(item);
+  });
 
-	const postData = async (url, data) => {
-		const res = await fetch(url, {
-			method: 'POST',
-			headers: {
-				'Content-type': 'application/json'
-			},
-			body: data
-		});
-		return await res.json();
-	};
+  const postData = async (url, data) => {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: data
+    });
+    return await res.json();
+  };
 
-	function bindPostData(form) {
-		form.addEventListener('submit', (e) => {
-			e.preventDefault();
+  function bindPostData(form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
 
-			const statusMassage = document.createElement('img');
-			statusMassage.src = massage.loading;
-			statusMassage.textContent = massage.loading;
-			statusMassage.style.cssText = `
-				display: block;
-				margin: 0 auto;
-			`;
-			form.append(statusMassage);
-			form.insertAdjacentElement('afterend', statusMassage);
+      const statusMassage = document.createElement('img');
+      statusMassage.src = massage.loading;
+      statusMassage.textContent = massage.loading;
+      statusMassage.style.cssText = `
+        display: block;
+        margin: 0 auto;
+      `;
+      form.append(statusMassage);
+      form.insertAdjacentElement('afterend', statusMassage);
 
-			const formData = new FormData(form);
+      const formData = new FormData(form);
 
-			const json = JSON.stringify(Object.fromEntries(formData.entries()));
+      const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-			postData(JSONServerRequest, json)
-			// Обработка успешной операции.
-			.then(data => {
-				console.log(data);
-				showThanksModal(massage.success);
-				statusMassage.remove();
-			})
-			// Обработка ошибки.
-			.catch(() => {
-				showThanksModal(massage.failure);
-			})
-			// Выполняется всегда, не зависимо как закончился запрос.
-			.finally(() => {
-				form.reset();
-			});
-		});
-	}
+      postData(JSONServerRequest, json)
+      // Обработка успешной операции.
+      .then(data => {
+        console.log(data);
+        showThanksModal(massage.success);
+        statusMassage.remove();
+      })
+      // Обработка ошибки.
+      .catch(() => {
+        showThanksModal(massage.failure);
+      })
+      // Выполняется всегда, не зависимо как закончился запрос.
+      .finally(() => {
+        form.reset();
+      });
+    });
+  }
 
-	// TOPIC: Beautiful user alert
+  // TOPIC: Beautiful user alert
 
-	function showThanksModal(message) {
-		const prevModalDialog = document.querySelector('.modal__dialog');
+  function showThanksModal(message) {
+    const prevModalDialog = document.querySelector('.modal__dialog');
 
-		prevModalDialog.classList.add('hide');
-		openModalWindow();
+    prevModalDialog.classList.add('hide');
+    openModalWindow();
 
-		const thanksModal = document.createElement('div');
-		thanksModal.classList.add('modal__dialog');
-		thanksModal.innerHTML = `
-			<div class="modal__content">
-				<div data-close class="modal__close">&times;</div>
-				<div class="modal__title">${message}</div>
-			</div>
-		`;
+    const thanksModal = document.createElement('div');
+    thanksModal.classList.add('modal__dialog');
+    thanksModal.innerHTML = `
+      <div class="modal__content">
+        <div data-close class="modal__close">&times;</div>
+        <div class="modal__title">${message}</div>
+      </div>
+    `;
 
-		document.querySelector('.modal').append(thanksModal);
+    document.querySelector('.modal').append(thanksModal);
 
-		setTimeout(() => {
-			thanksModal.remove();
-			prevModalDialog.classList.add('show');
-			prevModalDialog.classList.remove('hide');
-			closeModalWindow();
-		}, 5000);
-	}
+    setTimeout(() => {
+      thanksModal.remove();
+      prevModalDialog.classList.add('show');
+      prevModalDialog.classList.remove('hide');
+      closeModalWindow();
+    }, 5000);
+  }
 
-	// NOTE: Start server: json-server db.json
-	// fetch(JSONServerMenu)
-	// 	.then(data => data.json())
-	// 	.then(res => console.log(res));
+  // NOTE: Start server: json-server db.json
+  // fetch(JSONServerMenu)
+  // 	.then(data => data.json())
+  // 	.then(res => console.log(res));
 
-	// TOPIC: Slider
-	const slidersWrapper = document.querySelector('.offer__slider-wrapper');
-	const slidersField = document.querySelector('.offer__slider-inner');
-	const sliders = document.querySelectorAll('.offer__slider');
-	const prev = document.querySelector('offer__slider-prev');
-	const next = document.querySelector('offer__slider-next');
-	const current = document.querySelector('#current');
-	const total = document.querySelector('#total');
-	// Тут мы получаем ширину окошка, показываемого слайдера.
-	const width = window.getComputedStyle(slidersWrapper).width;
-	// Счетчик отображается от 1 а не как обычно от 0.
-	let sliderIndex = 1;
+  // TOPIC: Slider
+  const slidersWrapper = document.querySelector('.offer__slider-wrapper');
+  const slidersField = document.querySelector('.offer__slider-inner');
+  const sliders = document.querySelectorAll('.offer__slide');
+  const prev = document.querySelector('.offer__slider-prev');
+  const next = document.querySelector('.offer__slider-next');
+  const current = document.querySelector('#current');
+  const total = document.querySelector('#total');
+  const width = window.getComputedStyle(slidersWrapper).width; // Тут мы получаем ширину окошка, показываемого слайдера.
+  
+  let sliderIndex = 1; // Счетчик отображается от 1 а не как обычно от 0.
+  let offset = 0;
 
+  // Если число меньше 10 то добавлять 0.
+  if (sliders.length < 10) {
+    total.textContent = `0${sliders.length}`;
+    current.textContent = `0${sliderIndex}`;
+  } else {
+    total.textContent = sliders.length;
+    current.textContent = sliderIndex;
+  }
 
+  slidersField.style.width = 100 * sliders.length + '%'; // что бы каждый слайдер занимал 100% ширины.
+  slidersField.style.display = 'flex'; // Слайды выстраиваются в ряд.
+  slidersField.style.transition = '0.5s all'; // Задаем анимацию.
+
+  slidersWrapper.style.overflow = 'hidden'; // Убираем то что вылазит за границы экрана.
+
+  sliders.forEach(slider => {
+    slider.style.width = 'width'; // Каждому слайду мы задаем свою определенную ширину.
+  });
+
+  next.addEventListener('click', () => {
+    if (offset === +width.slice(0, width.length -2) * (sliders.length - 1)) {
+      offset = 0;
+    } else {
+      offset += +width.slice(0, width.length -2);
+    }
+
+    slidersField.style.transform = `translateX(-${offset}px)`;
+
+    if (sliderIndex === sliders.length) {
+      sliderIndex = 1;
+    } else {
+      sliderIndex ++;
+    }
+
+    if (sliders.length < 10) {
+      current.textContent = `0${sliderIndex}`;
+    } else {
+      current.textContent = sliderIndex;
+    }
+  });
+
+  prev.addEventListener('click', () => {
+    if (offset === 0) {
+      offset = +width.slice(0, width.length -2) * (sliders.length - 1);
+    } else {
+      offset -= +width.slice(0, width.length -2);
+    }
+
+    slidersField.style.transform = `translateX(-${offset}px)`;
+
+    if (sliderIndex === 1) {
+      sliderIndex = sliders.length;
+    } else {
+      sliderIndex --;
+    }
+
+    if (sliders.length < 10) {
+      current.textContent = `0${sliderIndex}`;
+    } else {
+      current.textContent = sliderIndex;
+    }
+  });
 
 });
