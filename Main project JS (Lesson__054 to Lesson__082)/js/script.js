@@ -405,14 +405,9 @@ window.addEventListener('DOMContentLoaded', () => {
       sliderIndex ++;
     }
 
-    if (sliders.length < 10) {
-      current.textContent = `0${sliderIndex}`;
-    } else {
-      current.textContent = sliderIndex;
-    }
+    addZeroBeforeNumber();
 
-    dots.forEach(dot => dot.style.opacity = '0.5');
-    dots[sliderIndex - 1].style.opacity = 1;
+    opacitySelectedDots();
   });
 
   prev.addEventListener('click', () => {
@@ -430,14 +425,9 @@ window.addEventListener('DOMContentLoaded', () => {
       sliderIndex --;
     }
 
-    if (sliders.length < 10) {
-      current.textContent = `0${sliderIndex}`;
-    } else {
-      current.textContent = sliderIndex;
-    }
+    addZeroBeforeNumber();
 
-    dots.forEach(dot => dot.style.opacity = '0.5');
-    dots[sliderIndex - 1].style.opacity = 1;
+    opacitySelectedDots();
   });
 
   // Переключение слайдеров по нажатию на точки (dots)
@@ -450,15 +440,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
       slidersField.style.transform = `translateX(-${offset}px)`;
 
-      if (sliders.length < 10) {
-        current.textContent = `0${sliderIndex}`;
-      } else {
-        current.textContent = sliderIndex;
-      }
-      
-      dots.forEach(dot => dot.style.opacity = '0.5');
-      dots[sliderIndex - 1].style.opacity = 1;
+      addZeroBeforeNumber();
+
+      opacitySelectedDots();
     });
   });
+
+  function opacitySelectedDots() {
+    dots.forEach(dot => dot.style.opacity = '0.5');
+    dots[sliderIndex - 1].style.opacity = 1;
+  }
+
+  function addZeroBeforeNumber() {
+    if (sliders.length < 10) {
+      current.textContent = `0${sliderIndex}`;
+    } else {
+      current.textContent = sliderIndex;
+    }
+  }
 
 });
