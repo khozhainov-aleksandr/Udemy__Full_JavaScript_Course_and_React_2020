@@ -391,10 +391,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   next.addEventListener('click', () => {
-    if (offset === +width.slice(0, width.length -2) * (sliders.length - 1)) {
+    if (offset === deleteNoteDigits(width) * (sliders.length - 1)) {
       offset = 0;
     } else {
-      offset += +width.slice(0, width.length -2);
+      offset += deleteNoteDigits(width);
     }
 
     slidersField.style.transform = `translateX(-${offset}px)`;
@@ -412,9 +412,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   prev.addEventListener('click', () => {
     if (offset === 0) {
-      offset = +width.slice(0, width.length -2) * (sliders.length - 1);
+      offset = deleteNoteDigits(width) * (sliders.length - 1);
     } else {
-      offset -= +width.slice(0, width.length -2);
+      offset -= deleteNoteDigits(width);
     }
 
     slidersField.style.transform = `translateX(-${offset}px)`;
@@ -436,7 +436,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const slideTo = event.target.getAttribute('data-slide-to');
 
       sliderIndex = slideTo;
-      offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+      offset = deleteNoteDigits(width) * (slideTo - 1);
 
       slidersField.style.transform = `translateX(-${offset}px)`;
 
@@ -445,6 +445,10 @@ window.addEventListener('DOMContentLoaded', () => {
       opacitySelectedDots();
     });
   });
+
+	function deleteNoteDigits(str) {
+		return +str.replace(/\D/g, '');
+	}
 
   function opacitySelectedDots() {
     dots.forEach(dot => dot.style.opacity = '0.5');
